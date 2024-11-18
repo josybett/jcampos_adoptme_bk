@@ -28,7 +28,9 @@ const generatePets = async (quantity) => {
 }
 
 const generatePetsReq = async (req, res) => {
-    const pets = await generatePets(100)
+    const qt = Number(req?.query?.quantity) && Number(req?.query?.quantity) > 0 ?
+                Number(req?.query?.quantity) : 100
+    const pets = await generatePets(qt)
     res.send({status:"success",payload:pets})
 }
 
@@ -57,8 +59,10 @@ const generateUsers = async (quantity) => {
 }
 
 const generateUsersReq = async (req, res) => {
-  const users = await generateUsers(50)
-  res.send({status:"success",payload:users})
+    const qt = Number(req?.query?.quantity) && Number(req?.query?.quantity) > 0 ?
+                Number(req?.query?.quantity) : 50
+    const users = await generateUsers(qt)
+    res.send({status:"success",payload:users})
 }
 
 const generateData = async (req, res) => {

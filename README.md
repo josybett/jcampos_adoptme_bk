@@ -8,9 +8,9 @@ Un servicio de backend para el sistema de gestión de adopción de mascotas que 
 - MongoDB
 
 ## Instalación
-1. Clone the repository
+1. Clonar repositorio
 ```sh
-git clone [git@github.com:josybett/jcampos_adoptme_bk.git]
+git clone git@github.com:josybett/jcampos_adoptme_bk.git
 ```
 
 2. Crear archivo .env con los valores de .env.example
@@ -29,13 +29,13 @@ npm start
 ### Api Mocks
 1. [x] Mocks Pets
 - Método: GET
-localhost:8080/api/mocks/mockingpets
+localhost:8080/api/mocks/mockingpets?quantity=1
 ![alt text](src/images/readme/image.png)
 
 2. [x] Mocks Users
 - Método: GET
-localhost:8080/api/mocks/mockingusers
-![alt text](src/images/readme/image-mocks-user.png.png)
+localhost:8080/api/mocks/mockingusers?quantity=2
+![alt text](src/images/readme/image-mocks-user.png)
 
 3. [x] Mocks Generate Data
 - Método: POST
