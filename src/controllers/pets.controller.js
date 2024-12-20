@@ -72,14 +72,15 @@ const createPetWithImage = async(req,res) =>{
         const file = req.file;
         const {name,specie,birthDate} = req.body;
         if(!name||!specie||!birthDate) return res.status(400).send({status:"error",error:"Incomplete values"})
-        console.log(file);
+        if (!file) {
+            res.status(400).send({status:"error", error:"faltan archivos adjuntos" })
+        }
         const pet = PetDTO.getPetInputFrom({
             name,
             specie,
             birthDate,
-            image:`${__dirname}/../public/img/${file.filename}`
+            image: file.path
         });
-        console.log(pet);
         const result = await petsService.create(pet);
         res.send({status:"success",payload:result})
     } catch (error) {

@@ -1,0 +1,223 @@
+paths:
+  /api/pets/:
+    get:
+      summary: Consultar todas las mascotas
+      tags:
+        - Mascotas
+      responses:
+        "200":
+          description: Retorna arreglo de las mascotas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pets'
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+    post:
+      summary: Crear una mascota
+      tags:
+        - Mascotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MsgResponsePet"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+      x-codegen-request-body-name: body
+  /api/pets/{pid}/:  
+    put:
+      summary: Actualizar una mascota
+      tags:
+        - Mascotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MsgResponse"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+      x-codegen-request-body-name: body
+    delete:
+      summary: Eliminar una mascota
+      tags:
+        - Mascotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pet"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MsgResponse"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+      x-codegen-request-body-name: body
+  /api/pets/withimage/:
+    post:
+      summary: Crear una mascota con imagen
+      tags:
+        - Mascotas
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PetImage"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MsgResponsePet"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+      x-codegen-request-body-name: body
+
+
+components:
+  schemas:
+    Pets:
+      type: array
+      items:
+        $ref: '#/components/schemas/PetGet'
+    Pet:
+      type: object
+      required:
+        - name
+        - specie
+        - birthDate
+      properties:
+        name:
+          type: string
+        specie:
+          type: string
+        birthDate:
+          type: string
+          format: date
+    PetImage:
+      type: object
+      required:
+        - name
+        - specie
+        - birthDate
+        - image
+      properties:
+        name:
+          type: string
+        specie:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        image:
+          type: string
+          format: binary
+    PetGet:
+      type: object
+      required:
+        - name
+        - specie
+        - birthDate
+        - image
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        specie:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        image:
+          type: string
+          format: url
+    MsgResponsePet:
+      type: object
+      properties:
+        status:
+          type: string
+        payload:
+          $ref: '#/components/schemas/PetGet'
+    MsgResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Respuesta exitosa
+        message:
+          type: string
+          description: Mensaje de operación exitosa

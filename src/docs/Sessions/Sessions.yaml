@@ -1,0 +1,200 @@
+paths:
+  /api/sessions/current:
+    get:
+      summary: Consultar la sesión del usuario actual
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/sessions/unprotectedLogin:
+    get:
+      summary: Iniciar sesión sin protección
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MsgResponse"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/sessions/unprotectedCurrent:
+    get:
+      summary: Usuario actual sin protección
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/sessions/register:
+    post:
+      summary: Registrar un nuevo usuario
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Estado de éxito
+                  payload:
+                    type: string
+                    description: Retorna el id del usuario creado
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/sessions/login:
+    post:
+      summary: Iniciar sesión
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionLogin"
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+
+components:
+  schemas:
+    Session:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID de la sesión
+        user:
+          type: string
+          description: ID del usuario
+        role:
+          type: string
+          description: Rol del usuario
+        token:
+          type: string
+          description: Token de la sesión
+      required:
+        - _id
+        - user
+        - role
+        - token
+    SessionLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Correo del usuario
+        password:
+          type: string
+          description: Contraseña del usuario
+      required:
+        - email
+        - password
+    MsgResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Estado de error
+          example: success
+        payload:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Nombre del usuario logueado
+            role:
+              type: string
+              description: Rol del usuario logueado
+            email:
+              type: string
+              description: Correo del usuario logueado
+            iat:
+              type: number
+              description: Fecha de inicio de la sesión
+            exp:  
+              type: number
+              description: Fecha de inicio de la sesión

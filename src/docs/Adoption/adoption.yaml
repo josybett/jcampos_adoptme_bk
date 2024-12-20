@@ -1,0 +1,105 @@
+paths:
+  /api/adoptions/:
+    get:
+      summary: Obtener todas las adopciones de mascotas
+      tags:
+        - Adopciones
+      responses:
+        "200":
+          description: Lista de adopciones de mascotas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Adoption'
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/adoptions/{aid}:
+    get:
+      summary: Obtener una adopción de mascota por ID
+      tags:
+      - Adopciones
+      parameters:
+        - name: aid
+          in: path
+          description: ID de la adopción de mascota
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Adopción de mascota encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adoption'
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+  /api/adoptions/{uid}/{pid}:
+    post:
+      summary: Crear una nueva adopción de mascota
+      tags:
+      - Adopciones
+      parameters:
+        - name: uid
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          description: ID de la mascota
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Adopción de mascota creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adoption'
+        "400":
+          description: Manejo de error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+        "500":
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MsgError'
+
+components:
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        owner:
+          $ref: '#/components/schemas/User'
+        pet:
+          $ref: '#/components/schemas/PetGet'

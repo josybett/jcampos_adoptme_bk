@@ -86,8 +86,7 @@ const generateData = async (req, res) => {
             for (const user of mockUsers) {
                 await usersService.create(user);
             }
-            //const insertedUsers = await userModel.insertMany(mockUsers);
-           // console.log(insertedUsers)
+
             result.users = mockUsers.length;
         } catch (error) {
             result.errors.push({

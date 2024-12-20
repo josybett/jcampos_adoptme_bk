@@ -1,41 +1,10 @@
 import { usersService } from "../services/index.js"
 import CustomError from "../utils/errors/customError.js";
 import { ErrorMessages } from "../utils/errors/errorMessages.js";
+import bcrypt from 'bcrypt';
+import __dirname from "../utils/index.js";
 
 const controller = 'users.controller.js'
-const saveUser = async(req, res)=>{
-    try{
-        const { first_name, last_name, email, password } = req.body;
-        if (!first_name || !last_name || !email || !password) {
-            console.log(ErrorMessages.USER_REGISTRATION.MISSING_FIELDS)
-            CustomError.createError(ErrorMessages.USER_REGISTRATION.MISSING_FIELDS);
-        }
-
-        // Email validacióm
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            CustomError.createError(ErrorMessages.USER_REGISTRATION.INVALID_EMAIL);
-        }
-
-        // Validación si existe usuario
-        const existingUser = await usersService.findOne({ email });
-        if (existingUser) {
-            CustomError.createError(ErrorMessages.USER_REGISTRATION.EMAIL_EXISTS);
-        }
-
-        // Password validacion
-        if (password.length < 8 || !/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
-            CustomError.createError(ErrorMessages.USER_REGISTRATION.PASSWORD_POLICY);
-        }
-        password = await bcrypt.hash(password, 10);
-
-        const result = await usersService.save(user);
-        res.send({status:"success", message:"User created with ID: " + result.id})
-    } catch (error) {
-        req.logger.error(`${controller} saveUser: ${error.message}`)
-        res.status(400).send({status:"error", error:error.message})
-    }
-}
 
 const getAllUsers = async(req,res)=>{
     try {
@@ -81,9 +50,36 @@ const deleteUser = async(req,res) =>{
         const userId = req.params.uid;
         const result = await usersService.getUserById(userId);
         req.logger.info(`${controller} deleteUser: ${result}`);
+        await usersService.delete(userId)
         res.send({status:"success",message:"User deleted"})
     } catch (error) {
         req.logger.error(`${controller} deleteUser: ${error.message}`)
+        res.status(400).send({status:"error", error:error.message})
+    }
+}
+
+const uploadDocuments = async(req,res)=>{
+    try {
+        const userId = req.params.uid;
+        const user = await usersService.getUserById(userId);
+
+        if(!user) return res.status(404).send({status:"error", error:"User not found"})
+        const files = req.files;
+        if (!files) {
+            res.status(400).send({status:"error", error:"faltan archivos adjuntos" })
+        }
+        for (let file of files) {
+            user.documents.push({
+                name: file.originalname,
+                path: file.path,
+            })
+        }
+        await usersService.update(user._id, user);
+        const result = await usersService.getUserById(userId);
+
+        res.send({status:"success", message:"Documents uploaded", payload: result});
+    } catch (error) {
+        req.logger.error(`${controller} uploadDocuments: ${error.message}`)
         res.status(400).send({status:"error", error:error.message})
     }
 }
@@ -93,5 +89,5 @@ export default {
     getAllUsers,
     getUser,
     updateUser,
-    saveUser
+    uploadDocuments
 }
