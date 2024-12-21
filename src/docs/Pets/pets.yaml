@@ -58,6 +58,13 @@ paths:
       summary: Actualizar una mascota
       tags:
         - Mascotas
+      parameters:
+        - name: pid
+          in: path
+          description: ID de mascota
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -88,6 +95,13 @@ paths:
       summary: Eliminar una mascota
       tags:
         - Mascotas
+      parameters:
+        - name: pid
+          in: path
+          description: ID de mascota
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:

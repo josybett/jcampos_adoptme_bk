@@ -30,14 +30,18 @@ const getUser = async(req,res)=> {
     }
 }
 
-const updateUser =async(req,res)=>{
+const updateUser = async(req,res)=>{
+    console.log('entra aqui')
     try {
+        console.log(req)
         const updateBody = req.body;
+        console.log(updateBody)
         const userId = req.params.uid;
         const user = await usersService.getUserById(userId);
         if(!user) return res.status(404).send({status:"error", error:"User not found"})
-        const result = await usersService.update(userId,updateBody);
-        res.send({status:"success",message:"User updated"})
+        await usersService.update(userId,updateBody);
+        const result = await usersService.getUserById(userId);
+        res.send({status:"success",message:"User updated",payload:result})
     } catch (error) {
         req.logger.error(`${controller} updateUser: ${error.message}`)
         res.status(400).send({status:"error", error:error.message})
